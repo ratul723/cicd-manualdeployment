@@ -1,0 +1,68 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install
+      - name: Create An Artifact
+        run: echo "hello World" > hello.txt
+      - name: Upload An Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hello_artifact
+          path: ./hello.txt
+      - name: Run tests
+        run: npm test
+
+  build-and-deploy:
+    needs: test
+    runs-on: self-hosted
+    steps:
+      - name: Checkout The Code
+        uses: actions/checkout@v3
+
+      - name: Download The Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: hello_artifact
+      - name: Print The Artifact
+        run: |
+          cat ./hello.txt
+
+      - name: Build application
+        run: |
+          npm install
+          # Add any build steps if needed
+
+      # We Need To install PM2 on Our Environment first
+      - name: Deploy application
+        run: |
+          ls -a
+          pm2 status
+          # Stop existing process if running
+          pm2 delete node-express-app || true
+
+
+
+          # Start new process
+          pm2 start ./src/server.js --name node-express-app
+
+          # Save PM2 process list
+          pm2 save
