@@ -39,9 +39,7 @@ describe("Server Tests", () => {
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.an("object");
-          expect(res.body.message).to.equal(
-            "Tiya is the person who brought me to this position"
-          );
+          expect(res.body.message).to.equal("Hello World");
           done();
         });
     });
