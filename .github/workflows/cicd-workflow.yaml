@@ -62,7 +62,7 @@ jobs:
 
 
           # Start new process
-          pm2 start ./src/server.js --name node-express-app
+          pm2 start ./src/server.js --name npm-process
 
           # Save PM2 process list
           pm2 save
