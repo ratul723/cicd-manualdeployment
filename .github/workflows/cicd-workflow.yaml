@@ -28,7 +28,7 @@ jobs:
           name: hello_artifact
           path: ./hello.txt
       - name: Run tests
-        run: npm test
+        run: npm run check
 
   build-and-deploy:
     needs: test
